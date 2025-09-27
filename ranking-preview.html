@@ -207,28 +207,24 @@
             height: 100%;
         }
         
-        /* 6. Responsive para móvil (Ajusta el tamaño y oculta el mapa) */
+        /* 6. Responsive para móvil (MANTENIENDO EL MAPA) */
         @media (max-width: 600px) {
-            .reviews-ranking-component-wrapper {
-                /* Si necesitas forzar el ancho en el móvil, puedes poner un max-width aquí */
-                /* max-width: 400px; */ 
-            }
-            
             .google-reviews-card {
-                /* Tamaño fijo para móvil, ya que el componente de Framer probablemente lo reducirá */
-                width: 380px; /* Tamaño que suele verse bien en la mayoría de móviles */
-                height: 520px;
-                max-width: 98vw;
+                /* Forzamos el ancho de escritorio para que el mapa quepa, esto puede causar scroll horizontal */
+                width: 650px; 
+                height: 700px; /* Mantenemos la altura de escritorio */
+                max-width: 650px; /* Anulamos la restricción del 90% para que el ancho se mantenga fijo */
                 border-radius: 14px;
             }
             
             .google-reviews-card .map-area {
-                display: none;
+                /* Quitamos 'display: none' para que el mapa se muestre */
+                display: block; 
+                width: 50%; /* Mantenemos el 50% de ancho */
             }
             .google-reviews-card .results-list {
-                width: 100%;
+                width: 50%; /* Reestablecemos el 50% de ancho para el listado */
                 height: 100%;
-                /* Asegúrate de que el contenido no se scrollee en móvil */
                 overflow: hidden; 
             }
         }
