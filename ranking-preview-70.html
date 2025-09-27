@@ -22,20 +22,20 @@
             /* Contenedor principal para aislar el componente */
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* CAMBIO CLAVE: Alinea el contenido al inicio (arriba) */
-            padding: 0; /* CAMBIO CLAVE: Elimina el padding de 20px */
+            align-items: flex-start; /* PEGARLO AL BORDE SUPERIOR */
+            padding: 0; /* ELIMINAR MÁRGENES */
             
-            /* Ajuste para el escalado */
+            /* Ajuste para que el contenedor principal aún ocupe el espacio */
             width: 100%;
-            height: 700px; /* Mantener la altura para la animación */
+            height: 700px;
             box-sizing: border-box;
         }
 
         /* 3. Animación de flotación */
         @keyframes floatEffect {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-5px) rotate(0deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+            0% { transform: translateY(0px) rotate(0deg) scale(0.7); } /* INCLUYE ESCALADO */
+            50% { transform: translateY(-5px) rotate(0deg) scale(0.7); } /* INCLUYE ESCALADO */
+            100% { transform: translateY(0px) rotate(0deg) scale(0.7); } /* INCLUYE ESCALADO */
         }
 
         .floating-card-animation {
@@ -60,8 +60,7 @@
             color: var(--main-text-color);
             margin: 0;
             
-            /* Se aplica el escalado aquí para que el wrapper (padre) lo centre */
-            transform: scale(0.7); /* Escala al 70% */
+            /* MOVIDO AL WRAPPER O ANIMACIÓN transform: scale(0.7); */
             transform-origin: top center; /* Centrar el escalado desde la parte superior */
         }
 
@@ -125,7 +124,7 @@
             align-items: center;
             background-color: var(--white);
             position: relative;
-            transition: transform 1s ease-in-out; /* Transición de la animación de movimiento */
+            transition: transform 1s ease-in-out; 
         }
         .review-item.highlighted {
             background-color: #eaf1fb;
@@ -137,7 +136,7 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background-color: #1a73e8; /* Borde azul de resaltado */
+            background-color: #1a73e8; 
         }
         
         .review-item-info {
@@ -163,7 +162,7 @@
             margin-right: 4px;
         }
         .review-item-info .stars-and-reviews .stars {
-            color: #fbbc04; /* Color de las estrellas de Google */
+            color: #fbbc04; 
             font-size: 14px;
             margin-right: 4px;
         }
@@ -178,7 +177,7 @@
             flex-direction: column;
         }
         .review-item-info .details .open-status {
-            color: #188038; /* Color verde de "Abierto" */
+            color: #188038; 
         }
 
         .review-item-icon {
@@ -196,10 +195,10 @@
 
         /* Colores de fondo específicos para "Tu negocio" */
         #my-business-review .review-item-icon {
-            background-color: #d5e3f8; /* Azul más oscuro para tu negocio */
+            background-color: #d5e3f8; 
         }
         .review-item:not(.highlighted) .review-item-icon {
-            background-color: #f0f2f5; /* Gris claro para la competencia */
+            background-color: #f0f2f5; 
         }
 
         /* Asegura que el SVG se ajuste al contenedor del icono */
@@ -208,27 +207,20 @@
             height: 100%;
         }
         
-        /* 6. Responsive (Aseguramos que el contenedor se ajusta bien en móvil) */
+        /* 6. Responsive */
         @media (max-width: 600px) {
             .reviews-ranking-component-wrapper {
-                height: 500px; /* Se puede reducir la altura del wrapper en móvil si es necesario */
+                height: 500px;
                 overflow: hidden;
             }
             .google-reviews-card {
-                /* Aseguramos que los estilos de escalado y centrado son correctos en móvil */
+                /* Para móvil, si queremos que se vea el 70% del componente, mantenemos el escalado. */
                 transform: scale(0.7); 
                 transform-origin: top center;
                 width: 650px; 
                 height: 700px;
                 max-width: none;
                 margin: 0 auto; 
-            }
-            /* Otros estilos responsive se mantienen como estaban */
-            .google-reviews-card .content-area {
-                height: calc(100% - 60px); 
-            }
-            .google-reviews-card .map-area, .google-reviews-card .results-list {
-                width: 50%;
             }
         }
     </style>
@@ -432,45 +424,38 @@
                         currentStep++;
                         
                         if (currentStep === numCompetitors) {
-                            // Cuando Tu Negocio pasa al primer lugar (después de pasar la última competencia)
                             moveNext();
                         } else {
                             setTimeout(moveNext, 1500);
                         }
                     } else {
-                        // Reiniciar el bucle después de un descanso
                         setTimeout(startLoop, 3000);
                     }
                 }
                 
-                // Empezar la animación
                 moveNext();
             }
 
             function startLoop() {
                 const allCards = [myBusinessCard, ...competitorCards];
                 allCards.forEach(item => {
-                    item.style.transition = 'none'; // Desactivar transición para el reset
+                    item.style.transition = 'none'; 
                     item.style.transform = 'translateY(0)';
                 });
 
-                // Resetear los valores iniciales
                 ratingElement.textContent = ratingSteps[0].rating.toFixed(1).replace('.', ',');
                 starsElement.textContent = updateStarRating(ratingSteps[0].rating);
                 reviewsCountElement.textContent = `(${formatNumber(ratingSteps[0].reviews)})`;
                 
                 setTimeout(() => {
-                    // CÓDIGO CORREGIDO: Usar la altura del primer competidor para mayor fiabilidad.
                     competitorHeight = competitorCards[0].offsetHeight;
                     
-                    // Reactivar la transición para la animación
                     allCards.forEach(item => {
                         item.style.transition = 'transform 1s ease-in-out';
                     });
                     
-                    // Iniciar la secuencia de animación
                     animateRanking();
-                }, 50); // Pequeño retraso para asegurar el reset visual
+                }, 50); 
             }
 
             startLoop();
