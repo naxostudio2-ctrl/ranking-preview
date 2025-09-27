@@ -24,6 +24,8 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            /* CRÍTICO: Deshabilita clics y toques para que actúe como video/imagen */
+            pointer-events: none; 
             /* Si quieres un fondo para verlo mejor, descomenta: */
             /* background-color: #f0f2f5; */
         }
@@ -75,10 +77,13 @@
             font-size: 1rem;
             padding: 0.5rem;
             color: var(--main-text-color);
+            /* CRÍTICO: Inhabilitar cursor y edición */
+            pointer-events: none;
+            user-select: none;
         }
         .google-reviews-card .search-bar .icon {
             margin: 0 0.5rem;
-            cursor: pointer;
+            cursor: default; /* Cambiar cursor a default */
         }
 
         .google-reviews-card .content-area {
@@ -87,7 +92,8 @@
         }
         .google-reviews-card .results-list {
             width: 50%;
-            overflow: hidden;
+            height: 100%;
+            overflow: hidden; /* CRÍTICO: Evita el scroll interno en la lista */
             padding: 0;
             position: relative;
         }
@@ -201,25 +207,29 @@
             height: 100%;
         }
         
-        /* 6. Responsive para móvil (CORREGIDO: Altura Automática) */
+        /* 6. Responsive para móvil (Ajusta el tamaño y oculta el mapa) */
         @media (max-width: 600px) {
+            .reviews-ranking-component-wrapper {
+                /* Si necesitas forzar el ancho en el móvil, puedes poner un max-width aquí */
+                /* max-width: 400px; */ 
+            }
+            
             .google-reviews-card {
-                width: 100%; 
-                max-width: 350px;
-                height: auto; /* <--- CORRECCIÓN CLAVE: Altura automática */
-                max-height: 80vh; /* Máx. 80% del alto de la ventana */
-                overflow-y: hidden; 
+                /* Tamaño fijo para móvil, ya que el componente de Framer probablemente lo reducirá */
+                width: 380px; /* Tamaño que suele verse bien en la mayoría de móviles */
+                height: 520px;
+                max-width: 98vw;
                 border-radius: 14px;
             }
-            .google-reviews-card .content-area {
-                height: auto; /* Asegúrate de que el área de contenido también se ajuste */
-            }
+            
             .google-reviews-card .map-area {
                 display: none;
             }
             .google-reviews-card .results-list {
                 width: 100%;
-                height: auto;
+                height: 100%;
+                /* Asegúrate de que el contenido no se scrollee en móvil */
+                overflow: hidden; 
             }
         }
     </style>
@@ -356,9 +366,10 @@
             const starsElement = document.getElementById('my-business-stars');
             const ratingElement = document.getElementById('my-business-rating');
             const myBusinessCard = document.getElementById('my-business-review');
-            const competitorCards = Array.from(document.querySelectorAll('.review-item:not(#my-business-review)'));
-            const numCompetitors = competitorCards.length;
-            let competitorHeight = 0;
+            const resultsListContainer = document.querySelector('.results-list-container');
+            
+            // Usaremos una lista de elementos que incluya el negocio para gestionar el orden del DOM
+            let initialCardsOrder = Array.from(resultsListContainer.querySelectorAll('.review-item'));
 
             const ratingSteps = [
                 { rating: 2.4, reviews: 215 },
@@ -368,6 +379,12 @@
                 { rating: 4.3, reviews: 3488 },
                 { rating: 4.9, reviews: 4091 }
             ];
+
+            let competitorHeight = 0;
+            const ANIMATION_DURATION = 1000;
+            const TRANSITION_STYLE = `transform ${ANIMATION_DURATION / 1000}s cubic-bezier(0.4, 0, 0.2, 1)`;
+
+            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
             function updateStarRating(rating) {
                 const fullStars = Math.floor(rating);
@@ -383,85 +400,114 @@
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
 
-            function animateRanking() {
+            async function animateRanking() {
+                // Obtener el orden actual de las tarjetas en el DOM
+                let allCards = Array.from(resultsListContainer.querySelectorAll('.review-item'));
                 let currentStep = 0;
                 
-                function moveNext() {
-                    if (currentStep < ratingSteps.length - 1) {
-                        const nextStepData = ratingSteps[currentStep + 1];
-                        const prevStepData = ratingSteps[currentStep];
+                while (currentStep < ratingSteps.length - 1) {
+                    const nextStepData = ratingSteps[currentStep + 1];
+                    const prevStepData = ratingSteps[currentStep];
+                    
+                    // --- FASE 1: Animación de los valores de rating ---
+                    const startReviews = prevStepData.reviews;
+                    const endReviews = nextStepData.reviews;
+                    const startRating = prevStepData.rating;
+                    const endRating = nextStepData.rating;
+                    const startTime = Date.now();
 
-                        const startReviews = prevStepData.reviews;
-                        const endReviews = nextStepData.reviews;
-                        const startRating = prevStepData.rating;
-                        const endRating = nextStepData.rating;
-                        const animateDuration = 1000;
-                        const startTime = Date.now();
-
-                        function updateValues() {
-                            const elapsed = Date.now() - startTime;
-                            const progress = Math.min(elapsed / animateDuration, 1);
-                            
-                            const currentReviews = Math.floor(startReviews + (endReviews - startReviews) * progress);
-                            reviewsCountElement.textContent = `(${formatNumber(currentReviews)})`;
-                            const currentRating = (startRating + (endRating - startRating) * progress).toFixed(1).replace('.', ',');
-                            ratingElement.textContent = currentRating;
-                            starsElement.textContent = updateStarRating(parseFloat(currentRating.replace(',', '.')));
-                            
-                            if (progress < 1) {
-                                requestAnimationFrame(updateValues);
-                            }
-                        }
-                        updateValues();
-
-                        if (currentStep < numCompetitors) {
-                            myBusinessCard.style.transform = `translateY(-${(currentStep + 1) * competitorHeight}px)`;
-                            const competitorToMove = competitorCards[numCompetitors - 1 - currentStep];
-                            competitorToMove.style.transform = `translateY(${competitorHeight}px)`;
-                        }
-
-                        currentStep++;
+                    function updateValues() {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
                         
-                        if (currentStep === numCompetitors) {
-                            // Cuando Tu Negocio pasa al primer lugar (después de pasar la última competencia)
-                            moveNext();
-                        } else {
-                            setTimeout(moveNext, 1500);
+                        const currentReviews = Math.floor(startReviews + (endReviews - startReviews) * progress);
+                        reviewsCountElement.textContent = `(${formatNumber(currentReviews)})`;
+                        const currentRating = (startRating + (endRating - startRating) * progress).toFixed(1).replace('.', ',');
+                        ratingElement.textContent = currentRating;
+                        starsElement.textContent = updateStarRating(parseFloat(currentRating.replace(',', '.')));
+                        
+                        if (progress < 1) {
+                            requestAnimationFrame(updateValues);
                         }
-                    } else {
-                        // Reiniciar el bucle después de un descanso
-                        setTimeout(startLoop, 3000);
                     }
+                    updateValues();
+
+                    // --- FASE 2: Animación de movimiento (sólo si hay un cambio de posición) ---
+                    const currentMyBusinessIndex = allCards.indexOf(myBusinessCard);
+                    
+                    if (currentMyBusinessIndex > 0) {
+                        const competitorToMove = allCards[currentMyBusinessIndex - 1]; // El que está inmediatamente arriba
+
+                        // 1. Aplicar la transición para el movimiento
+                        myBusinessCard.style.transition = TRANSITION_STYLE;
+                        competitorToMove.style.transition = TRANSITION_STYLE;
+
+                        // 2. Aplicar el transform: subir el negocio y bajar la competencia
+                        myBusinessCard.style.transform = `translateY(-${competitorHeight}px)`;
+                        competitorToMove.style.transform = `translateY(${competitorHeight}px)`;
+                        
+                        await sleep(ANIMATION_DURATION); 
+
+                        // 3. Reordenamiento y Reset de Transform
+
+                        // Desactivar la transición para el reset instantáneo
+                        myBusinessCard.style.transition = 'none'; 
+                        competitorToMove.style.transition = 'none';
+
+                        // Reordenar el DOM: mover la tarjeta del negocio arriba de la competencia
+                        resultsListContainer.insertBefore(myBusinessCard, competitorToMove);
+
+                        // Resetear el transform (porque ahora el orden del DOM es correcto)
+                        myBusinessCard.style.transform = 'translateY(0)';
+                        competitorToMove.style.transform = 'translateY(0)';
+
+                        // CRÍTICO: Forzar Reflow para que el browser aplique el reset ANTES del siguiente paso
+                        void myBusinessCard.offsetHeight;
+                        
+                        await sleep(500); // Pausa de medio segundo para ver la nueva posición
+                        
+                        // Actualizar la lista de tarjetas después de cada movimiento
+                        allCards = Array.from(resultsListContainer.querySelectorAll('.review-item')); 
+
+                    } else {
+                        await sleep(1500); // Pausa más larga si ya está arriba
+                    }
+                    
+                    currentStep++;
                 }
-                
-                // Empezar la animación
-                moveNext();
+
+                await sleep(3000); // Pausa final antes de reiniciar
+                startLoop();
             }
 
             function startLoop() {
-                const allCards = [myBusinessCard, ...competitorCards];
-                allCards.forEach(item => {
-                    item.style.transition = 'none'; // Desactivar transición para el reset
+                // Reordenar todas las tarjetas al orden inicial (el orden del HTML estático)
+                initialCardsOrder.forEach(item => {
+                    item.style.transition = 'none'; // Asegurar que no hay transición
                     item.style.transform = 'translateY(0)';
+                    resultsListContainer.appendChild(item); 
                 });
 
-                // Resetear los valores iniciales
+                // Resetear los valores iniciales de rating
                 ratingElement.textContent = ratingSteps[0].rating.toFixed(1).replace('.', ',');
                 starsElement.textContent = updateStarRating(ratingSteps[0].rating);
                 reviewsCountElement.textContent = `(${formatNumber(ratingSteps[0].reviews)})`;
                 
+                // CRÍTICO: Obtener la altura de las tarjetas DESPUÉS del reset del DOM
                 setTimeout(() => {
-                    // CÓDIGO CORREGIDO: Usar la altura del primer competidor para mayor fiabilidad.
-                    competitorHeight = competitorCards[0].offsetHeight;
+                    const firstCompetitor = initialCardsOrder.find(card => card.id === 'review-item-1');
+                    if (firstCompetitor) {
+                        competitorHeight = firstCompetitor.offsetHeight;
+                    }
                     
-                    // Reactivar la transición para la animación
-                    allCards.forEach(item => {
-                        item.style.transition = 'transform 1s ease-in-out';
+                    // Reactivar la transición global para la animación
+                    initialCardsOrder.forEach(item => {
+                        item.style.transition = TRANSITION_STYLE;
                     });
                     
                     // Iniciar la secuencia de animación
                     animateRanking();
-                }, 50); // Pequeño retraso para asegurar el reset visual
+                }, 50); 
             }
 
             startLoop();
