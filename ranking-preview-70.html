@@ -23,36 +23,36 @@
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Cambiado a flex-start para mejor alineación después del escalado */
-            padding: 20px;
+            padding: 0px; /* 20px * 0.7 */
             /* CAMBIO CLAVE: Escalar TODO el contenido al 70% y centrar */
-            transform: scale(0.7); 
-            transform-origin: top center; /* Asegura que el escalado se haga desde el centro superior */
+            /* transform: scale(0.7);  */
+            /* transform-origin: top center;  Asegura que el escalado se haga desde el centro superior */
             /* Si quieres un fondo para verlo mejor, descomenta: */
             /* background-color: #f0f2f5; */
             
             /* Ajuste para que el contenedor principal aún ocupe el espacio */
             width: 100%;
-            height: 700px; /* Necesitas la altura original para contener el elemento escalado */
+            height: 490px; /* 700px * 0.7 */
             box-sizing: border-box;
         }
 
         /* 3. Animación de flotación */
         @keyframes floatEffect {
-            0% { transform: translateY(0px) rotate(0deg) scale(0.7); } /* Ajuste de la escala en la animación */
-            50% { transform: translateY(-5px) rotate(0deg) scale(0.7); }
-            100% { transform: translateY(0px) rotate(0deg) scale(0.7); }
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-3.5px) rotate(0deg); } /* 5px * 0.7 */
+            100% { transform: translateY(0px) rotate(0deg); }
         }
         /* La animación de flotación ya no necesita la clase, la ponemos en el elemento principal */
         
         /* 4. Estilos de la Tarjeta de Reseñas */
         .google-reviews-card {
             background: var(--chat-card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--chat-border);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            width: 650px;
-            height: 700px;
+            backdrop-filter: blur(10.5px); /* 15px * 0.7 */
+            border: 0.7px solid var(--chat-border); /* 1px * 0.7 */
+            border-radius: 14px; /* 20px * 0.7 */
+            box-shadow: 0 7px 28px rgba(0, 0, 0, 0.1); /* 10px, 40px * 0.7 */
+            width: 455px; /* 650px * 0.7 */
+            height: 490px; /* 700px * 0.7 */
             max-width: 90%;
             box-sizing: border-box;
             position: relative;
@@ -67,31 +67,31 @@
         }
 
         .google-reviews-card .search-bar {
-            padding: 1rem;
+            padding: 0.7rem; /* 1rem * 0.7 */
             background-color: var(--white);
-            border-bottom: 1px solid #E0E4EB;
+            border-bottom: 0.7px solid #E0E4EB; /* 1px * 0.7 */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 1.2rem;
+            font-size: 0.84rem; /* 1.2rem * 0.7 */
             color: var(--light-grey-text);
         }
         .google-reviews-card .search-bar input {
             flex-grow: 1;
             border: none;
             outline: none;
-            font-size: 1rem;
-            padding: 0.5rem;
+            font-size: 0.7rem; /* 1rem * 0.7 */
+            padding: 0.35rem; /* 0.5rem * 0.7 */
             color: var(--main-text-color);
         }
         .google-reviews-card .search-bar .icon {
-            margin: 0 0.5rem;
+            margin: 0 0.35rem; /* 0.5rem * 0.7 */
             cursor: pointer;
         }
 
         .google-reviews-card .content-area {
             display: flex;
-            height: calc(100% - 60px);
+            height: calc(100% - 42px); /* 60px * 0.7 */
         }
         .google-reviews-card .results-list {
             width: 50%;
@@ -105,7 +105,7 @@
             background-size: cover;
             background-position: center;
             flex-shrink: 0;
-            border-left: 1px solid #E0E4EB;
+            border-left: 0.7px solid #E0E4EB; /* 1px * 0.7 */
         }
         .results-list-container {
             display: flex;
@@ -113,20 +113,20 @@
             width: 100%;
             height: 100%;
             position: relative;
-            transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+            transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); /* 1s * 0.7 */
             will-change: transform;
         }
         
         /* 5. Estilos de los ítems de Reseña */
         .review-item {
-            padding: 16px 20px;
-            border-bottom: 1px solid #e8eaed; 
+            padding: 11px 14px; /* 16px, 20px * 0.7 */
+            border-bottom: 0.7px solid #e8eaed; /* 1px * 0.7 */
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: var(--white);
             position: relative;
-            transition: transform 1s ease-in-out; /* Transición de la animación de movimiento */
+            transition: transform 0.7s ease-in-out; /* 1s * 0.7 */
         }
         .review-item.highlighted {
             background-color: #eaf1fb;
@@ -137,7 +137,7 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 3px;
+            width: 2.1px; /* 3px * 0.7 */
             background-color: #1a73e8; /* Borde azul de resaltado */
         }
         
@@ -145,12 +145,12 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2.8px; /* 4px * 0.7 */
             text-align: left;
         }
         .review-item-info h4 {
             margin: 0;
-            font-size: 16px;
+            font-size: 11.2px; /* 16px * 0.7 */
             font-weight: 500;
             color: #1f1f1f;
         }
@@ -159,21 +159,21 @@
             align-items: center;
         }
         .review-item-info .stars-and-reviews .rating {
-            font-size: 14px;
+            font-size: 9.8px; /* 14px * 0.7 */
             color: #1f1f1f;
-            margin-right: 4px;
+            margin-right: 2.8px; /* 4px * 0.7 */
         }
         .review-item-info .stars-and-reviews .stars {
             color: #fbbc04; /* Color de las estrellas de Google */
-            font-size: 14px;
-            margin-right: 4px;
+            font-size: 9.8px; /* 14px * 0.7 */
+            margin-right: 2.8px; /* 4px * 0.7 */
         }
         .review-item-info .stars-and-reviews .reviews-count {
-            font-size: 14px;
+            font-size: 9.8px; /* 14px * 0.7 */
             color: #70757a;
         }
         .review-item-info .details {
-            font-size: 14px;
+            font-size: 9.8px; /* 14px * 0.7 */
             color: #70757a;
             display: flex;
             flex-direction: column;
@@ -183,15 +183,15 @@
         }
 
         .review-item-icon {
-            width: 58.5px;
-            height: 58.5px;
-            border-radius: 8px; 
+            width: 41px; /* 58.5px * 0.7 */
+            height: 41px;
+            border-radius: 5.6px; /* 8px * 0.7 */
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
-            margin-left: 16px;
-            padding: 10.4px;
+            margin-left: 11px; /* 16px * 0.7 */
+            padding: 7.3px; /* 10.4px * 0.7 */
             box-sizing: border-box; 
         }
 
@@ -221,7 +221,7 @@
                 pero el escalado global ya lo maneja */
                 width: auto;
                 overflow: visible;
-                padding: 20px;
+                padding: 14px;
             }
         }
     </style>
@@ -320,7 +320,7 @@
                         </div>
                         <div class="review-item-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0,0,256,256">
-                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.33333,5.33333)"><path d="M8,38c0,1.657 1.343,3 3,3h13.975l-16.975,-16.975z" fill="#c8c8c8"></path><path d="M8,16v8.025l16.975,16.975h13.025c1.657,0 3,-1.343 3,-3v-22z" fill="#9c9c9c"></path><path d="M14.75,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M24.5,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M34.25,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M44,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M9.562,7c-0.918,0 -1.718,0.625 -1.94,1.516l-2.612,10.464c-0.01,0.01 -0.01,0.01 -0.01,0.02h9.766l1.5,-12z" fill="#d5d5d5"></path><path d="M16.266,7l-1.5,12h9.734v-12z" fill="#7b7d80"></path><path d="M44,19c0,-0.01 0,-0.01 -0.01,-0.02l-2.612,-10.464c-0.222,-0.891 -1.022,-1.516 -1.94,-1.516h-6.703l1.5,12z" fill="#7b7d80"></path><path d="M32.735,7h-8.235v12h9.735z" fill="#d5d5d5"></path><path fill="#ededed" d="M33.649,38.299c-2.563,0 -4.649,-2.086 -4.649,-4.649c0,-2.563 2.086,-4.65 4.649,-4.65c1.072,0 2.119,0.374 2.947,1.054l-1.269,1.547c-0.477,-0.394 -1.058,-0.601 -1.678,-0.601c-1.461,0 -2.649,1.188 -2.649,2.649c0,1.461 1.188,2.649 2.649,2.649c1.107,0 2.058,-0.683 2.453,-1.649h-2.1v-2h4.296v1c0,2.564 -2.085,4.65 -4.649,4.65z"></path></g></g>
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.33333,5.33333)"><path d="M8,38c0,1.657 1.343,3 3,3h13.975l-16.975,-16.975z" fill="#c8c8c8"></path><path d="M8,16v8.025l16.975,16.975h13.025c1.657,0 3,-1.343 3,-3v-22z" fill="#9c9c9c"></path><path d="M14.75,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M24.5,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M34.25,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M44,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M9.562,7c-0.918,0 -1.718,0.625 -1.94,1.516l-2.612,10.464c-0.01,0.01 -0.01,0.01 -0.01,0.02h9.766l1.5,-12z" fill="#d5d5d5"></path><path d="M16.266,7l-1.5,12h9.734v-12z" fill="#7b7d80"></path><path d="M44,19c0,-0.01 0,-0.01 -0.01,-0.02l-2.612,-10.464c-0.222,-0.891 -1.022,-1.516 -1.94,-1.516h-6.703l1.5,12z" fill="#7b7d80"></path><path d="M32.735,7h-8.235v12h9.735z" fill="#d5d5d5"></path><path d="M33.649,38.299c-2.563,0 -4.649,-2.086 -4.649,-4.649c0,-2.563 2.086,-4.65 4.649,-4.65c1.072,0 2.119,0.374 2.947,1.054l-1.269,1.547c-0.477,-0.394 -1.058,-0.601 -1.678,-0.601c-1.461,0 -2.649,1.188 -2.649,2.649c0,1.461 1.188,2.649 2.649,2.649c1.107,0 2.058,-0.683 2.453,-1.649h-2.1v-2h4.296v1c0,2.564 -2.085,4.65 -4.649,4.65z" fill="#ededed"></path></g></g>
                             </svg>
                         </div>
                     </div>
