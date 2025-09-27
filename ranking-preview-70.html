@@ -33,9 +33,9 @@
 
         /* 3. Animación de flotación */
         @keyframes floatEffect {
-            0% { transform: translateY(0px) rotate(0deg) scale(0.7); } /* INCLUYE ESCALADO */
-            50% { transform: translateY(-5px) rotate(0deg) scale(0.7); } /* INCLUYE ESCALADO */
-            100% { transform: translateY(0px) rotate(0deg) scale(0.7); } /* INCLUYE ESCALADO */
+            0% { transform: translateY(0px) rotate(0deg) scale(0.3); } /* INCLUYE ESCALADO */
+            50% { transform: translateY(-5px) rotate(0deg) scale(0.3); } /* INCLUYE ESCALADO */
+            100% { transform: translateY(0px) rotate(0deg) scale(0.3); } /* INCLUYE ESCALADO */
         }
 
         .floating-card-animation {
@@ -60,7 +60,7 @@
             color: var(--main-text-color);
             margin: 0;
             
-            /* MOVIDO AL WRAPPER O ANIMACIÓN transform: scale(0.7); */
+            /* MOVIDO AL WRAPPER O ANIMACIÓN transform: scale(0.3); */
             transform-origin: top center; /* Centrar el escalado desde la parte superior */
         }
 
@@ -215,7 +215,7 @@
             }
             .google-reviews-card {
                 /* Para móvil, si queremos que se vea el 70% del componente, mantenemos el escalado. */
-                transform: scale(0.7); 
+                transform: scale(0.3); 
                 transform-origin: top center;
                 width: 650px; 
                 height: 700px;
