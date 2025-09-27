@@ -22,25 +22,25 @@
             /* Contenedor principal para aislar el componente */
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Asegura que el contenido esté pegado arriba */
-            padding: 0; /* CAMBIO CLAVE: Elimina el padding para pegarlo */
-            /* CAMBIO CLAVE: Escalar TODO el contenido al 70% y centrar */
-            transform: scale(0.7); 
-            transform-origin: top center; /* Asegura que el escalado se haga desde el centro superior */
-            /* Si quieres un fondo para verlo mejor, descomenta: */
-            /* background-color: #f0f2f5; */
+            align-items: flex-start; /* CAMBIO CLAVE: Alinea el contenido al inicio (arriba) */
+            padding: 0; /* CAMBIO CLAVE: Elimina el padding de 20px */
             
-            /* Ajuste para que el contenedor principal aún ocupe el espacio */
+            /* Ajuste para el escalado */
             width: 100%;
-            height: 700px; 
+            height: 700px; /* Mantener la altura para la animación */
             box-sizing: border-box;
         }
 
         /* 3. Animación de flotación */
         @keyframes floatEffect {
-            0% { transform: translateY(0px) rotate(0deg) scale(0.7); } 
-            50% { transform: translateY(-5px) rotate(0deg) scale(0.7); }
-            100% { transform: translateY(0px) rotate(0deg) scale(0.7); }
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(0deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .floating-card-animation {
+            animation: floatEffect 7s ease-in-out infinite alternate;
+            will-change: transform;
         }
         
         /* 4. Estilos de la Tarjeta de Reseñas */
@@ -60,8 +60,9 @@
             color: var(--main-text-color);
             margin: 0;
             
-            animation: floatEffect 7s ease-in-out infinite alternate;
-            will-change: transform;
+            /* Se aplica el escalado aquí para que el wrapper (padre) lo centre */
+            transform: scale(0.7); /* Escala al 70% */
+            transform-origin: top center; /* Centrar el escalado desde la parte superior */
         }
 
         .google-reviews-card .search-bar {
@@ -124,7 +125,7 @@
             align-items: center;
             background-color: var(--white);
             position: relative;
-            transition: transform 1s ease-in-out; 
+            transition: transform 1s ease-in-out; /* Transición de la animación de movimiento */
         }
         .review-item.highlighted {
             background-color: #eaf1fb;
@@ -136,7 +137,7 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background-color: #1a73e8; 
+            background-color: #1a73e8; /* Borde azul de resaltado */
         }
         
         .review-item-info {
@@ -162,7 +163,7 @@
             margin-right: 4px;
         }
         .review-item-info .stars-and-reviews .stars {
-            color: #fbbc04; 
+            color: #fbbc04; /* Color de las estrellas de Google */
             font-size: 14px;
             margin-right: 4px;
         }
@@ -177,7 +178,7 @@
             flex-direction: column;
         }
         .review-item-info .details .open-status {
-            color: #188038; 
+            color: #188038; /* Color verde de "Abierto" */
         }
 
         .review-item-icon {
@@ -195,10 +196,10 @@
 
         /* Colores de fondo específicos para "Tu negocio" */
         #my-business-review .review-item-icon {
-            background-color: #d5e3f8; 
+            background-color: #d5e3f8; /* Azul más oscuro para tu negocio */
         }
         .review-item:not(.highlighted) .review-item-icon {
-            background-color: #f0f2f5; 
+            background-color: #f0f2f5; /* Gris claro para la competencia */
         }
 
         /* Asegura que el SVG se ajuste al contenedor del icono */
@@ -207,20 +208,32 @@
             height: 100%;
         }
         
-        /* 6. Eliminación del Responsive ya que el escalado es global ahora */
+        /* 6. Responsive (Aseguramos que el contenedor se ajusta bien en móvil) */
         @media (max-width: 600px) {
-            .google-reviews-card {
-                transform: none; 
-            }
             .reviews-ranking-component-wrapper {
-                width: auto;
-                overflow: visible;
-                padding: 0; /* Asegura que tampoco haya padding en móvil */
+                height: 500px; /* Se puede reducir la altura del wrapper en móvil si es necesario */
+                overflow: hidden;
+            }
+            .google-reviews-card {
+                /* Aseguramos que los estilos de escalado y centrado son correctos en móvil */
+                transform: scale(0.7); 
+                transform-origin: top center;
+                width: 650px; 
+                height: 700px;
+                max-width: none;
+                margin: 0 auto; 
+            }
+            /* Otros estilos responsive se mantienen como estaban */
+            .google-reviews-card .content-area {
+                height: calc(100% - 60px); 
+            }
+            .google-reviews-card .map-area, .google-reviews-card .results-list {
+                width: 50%;
             }
         }
     </style>
     
-    <div class="google-reviews-card"> 
+    <div class="google-reviews-card floating-card-animation">
         <div class="search-bar">
             <span class="icon">🔍</span>
             <input type="text" value="Restaurante" readonly="">
@@ -314,7 +327,7 @@
                         </div>
                         <div class="review-item-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0,0,256,256">
-                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.33333,5.33333)"><path d="M8,38c0,1.657 1.343,3 3,3h13.975l-16.975,-16.975z" fill="#c8c8c8"></path><path d="M8,16v8.025l16.975,16.975h13.025c1.657,0 3,-1.343 3,-3v-22z" fill="#9c9c9c"></path><path d="M14.75,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M24.5,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M34.25,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M44,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M9.562,7c-0.918,0 -1.718,0.625 -1.94,1.516l-2.612,10.464c-0.01,0.01 -0.01,0.01 -0.01,0.02h9.766l1.5,-12z" fill="#d5d5d5"></path><path d="M16.266,7l-1.5,12h9.734v-12z" fill="#7b7d80"></path><path d="M44,19c0,-0.01 0,-0.01 -0.01,-0.02l-2.612,-10.464c-0.222,-0.891 -1.022,-1.516 -1.94,-1.516h-6.703l1.5,12z" fill="#7b7d80"></path><path d="M32.735,7h-8.235v12h9.735z" fill="#d5d5d5"></path><path fill="#ededed" d="M33.649,38.299c-2.563,0-4.649-2.086-4.649-4.649c0-2.563 2.086-4.65 4.649-4.65c1.072,0 2.119,0.374 2.947,1.054l-1.269,1.547c-0.477,-0.394 -1.058,-0.601 -1.678,-0.601c-1.461,0 -2.649,1.188 -2.649,2.649c0,1.461 1.188,2.649 2.649,2.649c1.107,0 2.058,-0.683 2.453,-1.649h-2.1v-2h4.296v1c0,2.564 -2.085,4.65 -4.649,4.65z"></path></g></g>
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.33333,5.33333)"><path d="M8,38c0,1.657 1.343,3 3,3h13.975l-16.975,-16.975z" fill="#c8c8c8"></path><path d="M8,16v8.025l16.975,16.975h13.025c1.657,0 3,-1.343 3,-3v-22z" fill="#9c9c9c"></path><path d="M14.75,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M24.5,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M34.25,19.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88v-0.12h9.74c0.01,0.04 0.01,0.08 0.01,0.12z" fill="#bebebe"></path><path d="M44,19v0.12c0,2.7 -2.18,4.88 -4.88,4.88c-2.69,0 -4.87,-2.18 -4.87,-4.88c0,-0.04 0,-0.08 0.01,-0.12z" fill="#5f5f5f"></path><path d="M9.562,7c-0.918,0 -1.718,0.625 -1.94,1.516l-2.612,10.464c-0.01,0.01 -0.01,0.01 -0.01,0.02h9.766l1.5,-12z" fill="#d5d5d5"></path><path d="M16.266,7l-1.5,12h9.734v-12z" fill="#7b7d80"></path><path d="M44,19c0,-0.01 0,-0.01 -0.01,-0.02l-2.612,-10.464c-0.222,-0.891 -1.022,-1.516 -1.94,-1.516h-6.703l1.5,12z" fill="#7b7d80"></path><path d="M32.735,7h-8.235v12h9.735z" fill="#d5d5d5"></path><path fill="#ededed" d="M33.649,38.299c-2.563,0 -4.649,-2.086 -4.649,-4.649c0,-2.563 2.086,-4.65 4.649,-4.65c1.072,0 2.119,0.374 2.947,1.054l-1.269,1.547c-0.477,-0.394 -1.058,-0.601 -1.678,-0.601c-1.461,0 -2.649,1.188 -2.649,2.649c0,1.461 1.188,2.649 2.649,2.649c1.107,0 2.058,-0.683 2.453,-1.649h-2.1v-2h4.296v1c0,2.564 -2.085,4.65 -4.649,4.65z"></path></g></g>
                             </svg>
                         </div>
                     </div>
@@ -419,38 +432,45 @@
                         currentStep++;
                         
                         if (currentStep === numCompetitors) {
+                            // Cuando Tu Negocio pasa al primer lugar (después de pasar la última competencia)
                             moveNext();
                         } else {
                             setTimeout(moveNext, 1500);
                         }
                     } else {
+                        // Reiniciar el bucle después de un descanso
                         setTimeout(startLoop, 3000);
                     }
                 }
                 
+                // Empezar la animación
                 moveNext();
             }
 
             function startLoop() {
                 const allCards = [myBusinessCard, ...competitorCards];
                 allCards.forEach(item => {
-                    item.style.transition = 'none'; 
+                    item.style.transition = 'none'; // Desactivar transición para el reset
                     item.style.transform = 'translateY(0)';
                 });
 
+                // Resetear los valores iniciales
                 ratingElement.textContent = ratingSteps[0].rating.toFixed(1).replace('.', ',');
                 starsElement.textContent = updateStarRating(ratingSteps[0].rating);
                 reviewsCountElement.textContent = `(${formatNumber(ratingSteps[0].reviews)})`;
                 
                 setTimeout(() => {
+                    // CÓDIGO CORREGIDO: Usar la altura del primer competidor para mayor fiabilidad.
                     competitorHeight = competitorCards[0].offsetHeight;
                     
+                    // Reactivar la transición para la animación
                     allCards.forEach(item => {
                         item.style.transition = 'transform 1s ease-in-out';
                     });
                     
+                    // Iniciar la secuencia de animación
                     animateRanking();
-                }, 50); 
+                }, 50); // Pequeño retraso para asegurar el reset visual
             }
 
             startLoop();
