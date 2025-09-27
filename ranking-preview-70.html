@@ -22,26 +22,27 @@
             /* Contenedor principal para aislar el componente */
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* PEGARLO AL BORDE SUPERIOR */
-            padding: 0; /* ELIMINAR MÁRGENES */
+            align-items: flex-start; /* Cambiado a flex-start para mejor alineación después del escalado */
+            padding: 20px;
+            /* CAMBIO CLAVE: Escalar TODO el contenido al 70% y centrar */
+            transform: scale(0.7); 
+            transform-origin: top center; /* Asegura que el escalado se haga desde el centro superior */
+            /* Si quieres un fondo para verlo mejor, descomenta: */
+            /* background-color: #f0f2f5; */
             
             /* Ajuste para que el contenedor principal aún ocupe el espacio */
             width: 100%;
-            height: 700px;
+            height: 700px; /* Necesitas la altura original para contener el elemento escalado */
             box-sizing: border-box;
         }
 
         /* 3. Animación de flotación */
         @keyframes floatEffect {
-            0% { transform: translateY(0px) rotate(0deg) scale(0.3); } /* INCLUYE ESCALADO */
-            50% { transform: translateY(-5px) rotate(0deg) scale(0.3); } /* INCLUYE ESCALADO */
-            100% { transform: translateY(0px) rotate(0deg) scale(0.3); } /* INCLUYE ESCALADO */
+            0% { transform: translateY(0px) rotate(0deg) scale(0.7); } /* Ajuste de la escala en la animación */
+            50% { transform: translateY(-5px) rotate(0deg) scale(0.7); }
+            100% { transform: translateY(0px) rotate(0deg) scale(0.7); }
         }
-
-        .floating-card-animation {
-            animation: floatEffect 7s ease-in-out infinite alternate;
-            will-change: transform;
-        }
+        /* La animación de flotación ya no necesita la clase, la ponemos en el elemento principal */
         
         /* 4. Estilos de la Tarjeta de Reseñas */
         .google-reviews-card {
@@ -60,8 +61,9 @@
             color: var(--main-text-color);
             margin: 0;
             
-            /* MOVIDO AL WRAPPER O ANIMACIÓN transform: scale(0.3); */
-            transform-origin: top center; /* Centrar el escalado desde la parte superior */
+            /* Eliminar la animación de flotación de aquí si se aplica al wrapper */
+            animation: floatEffect 7s ease-in-out infinite alternate;
+            will-change: transform;
         }
 
         .google-reviews-card .search-bar {
@@ -124,7 +126,7 @@
             align-items: center;
             background-color: var(--white);
             position: relative;
-            transition: transform 1s ease-in-out; 
+            transition: transform 1s ease-in-out; /* Transición de la animación de movimiento */
         }
         .review-item.highlighted {
             background-color: #eaf1fb;
@@ -136,7 +138,7 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background-color: #1a73e8; 
+            background-color: #1a73e8; /* Borde azul de resaltado */
         }
         
         .review-item-info {
@@ -162,7 +164,7 @@
             margin-right: 4px;
         }
         .review-item-info .stars-and-reviews .stars {
-            color: #fbbc04; 
+            color: #fbbc04; /* Color de las estrellas de Google */
             font-size: 14px;
             margin-right: 4px;
         }
@@ -177,7 +179,7 @@
             flex-direction: column;
         }
         .review-item-info .details .open-status {
-            color: #188038; 
+            color: #188038; /* Color verde de "Abierto" */
         }
 
         .review-item-icon {
@@ -195,10 +197,10 @@
 
         /* Colores de fondo específicos para "Tu negocio" */
         #my-business-review .review-item-icon {
-            background-color: #d5e3f8; 
+            background-color: #d5e3f8; /* Azul más oscuro para tu negocio */
         }
         .review-item:not(.highlighted) .review-item-icon {
-            background-color: #f0f2f5; 
+            background-color: #f0f2f5; /* Gris claro para la competencia */
         }
 
         /* Asegura que el SVG se ajuste al contenedor del icono */
@@ -207,25 +209,24 @@
             height: 100%;
         }
         
-        /* 6. Responsive */
+        /* 6. Eliminación del Responsive ya que el escalado es global ahora */
         @media (max-width: 600px) {
-            .reviews-ranking-component-wrapper {
-                height: 500px;
-                overflow: hidden;
-            }
+            /* Se eliminan o se dejan vacíos para no interferir */
             .google-reviews-card {
-                /* Para móvil, si queremos que se vea el 70% del componente, mantenemos el escalado. */
-                transform: scale(0.3); 
-                transform-origin: top center;
-                width: 650px; 
-                height: 700px;
-                max-width: none;
-                margin: 0 auto; 
+                /* Se eliminan las propiedades de transformación y escalado */
+                transform: none; 
+            }
+            .reviews-ranking-component-wrapper {
+                /* Restaurar el comportamiento normal si fuera necesario en móvil, 
+                pero el escalado global ya lo maneja */
+                width: auto;
+                overflow: visible;
+                padding: 20px;
             }
         }
     </style>
     
-    <div class="google-reviews-card floating-card-animation">
+    <div class="google-reviews-card"> 
         <div class="search-bar">
             <span class="icon">🔍</span>
             <input type="text" value="Restaurante" readonly="">
@@ -415,6 +416,11 @@
                         }
                         updateValues();
 
+                        // La lógica de movimiento vertical (translateY) no necesita escalarse 
+                        // en el JS porque el CSS scale(0.7) se encarga de que 
+                        // los píxeles de desplazamiento se interpreten como 0.7 veces su valor real.
+                        // Sin embargo, si 'competitorHeight' se calcula al 70% del tamaño real 
+                        // (debido a que ya está escalado), el código es correcto.
                         if (currentStep < numCompetitors) {
                             myBusinessCard.style.transform = `translateY(-${(currentStep + 1) * competitorHeight}px)`;
                             const competitorToMove = competitorCards[numCompetitors - 1 - currentStep];
@@ -424,38 +430,46 @@
                         currentStep++;
                         
                         if (currentStep === numCompetitors) {
+                            // Cuando Tu Negocio pasa al primer lugar (después de pasar la última competencia)
                             moveNext();
                         } else {
                             setTimeout(moveNext, 1500);
                         }
                     } else {
+                        // Reiniciar el bucle después de un descanso
                         setTimeout(startLoop, 3000);
                     }
                 }
                 
+                // Empezar la animación
                 moveNext();
             }
 
             function startLoop() {
                 const allCards = [myBusinessCard, ...competitorCards];
                 allCards.forEach(item => {
-                    item.style.transition = 'none'; 
+                    item.style.transition = 'none'; // Desactivar transición para el reset
                     item.style.transform = 'translateY(0)';
                 });
 
+                // Resetear los valores iniciales
                 ratingElement.textContent = ratingSteps[0].rating.toFixed(1).replace('.', ',');
                 starsElement.textContent = updateStarRating(ratingSteps[0].rating);
                 reviewsCountElement.textContent = `(${formatNumber(ratingSteps[0].reviews)})`;
                 
                 setTimeout(() => {
+                    // CÓDIGO CORREGIDO: Usar la altura del primer competidor para mayor fiabilidad.
+                    // .offsetHeight ya devuelve la altura escalada, por lo que el JS funciona sin cambios.
                     competitorHeight = competitorCards[0].offsetHeight;
                     
+                    // Reactivar la transición para la animación
                     allCards.forEach(item => {
                         item.style.transition = 'transform 1s ease-in-out';
                     });
                     
+                    // Iniciar la secuencia de animación
                     animateRanking();
-                }, 50); 
+                }, 50); // Pequeño retraso para asegurar el reset visual
             }
 
             startLoop();
